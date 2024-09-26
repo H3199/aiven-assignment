@@ -13,10 +13,10 @@ jobs:
     name: Terraform-postgres
     runs-on: ubuntu-latest
     env:
-      TF_VAR_AIVEN_PROJECT_NAME: ${{ secrets.AIVEN_PROJECT_NAME }}
-      TF_VAR_AIVEN_API_TOKEN: ${{ secrets.AIVEN_API_TOKEN }}
-      TF_VAR_PSQL_ADMIN_USERNAME: ${{ secrets.PSQL_ADMIN_USERNAME }}
-      TF_VAR_PSQL_ADMIN_PASSWORD: ${{ secrets.PSQL_ADMIN_PASSWORD }}
+      TF_VAR_project_name: ${{ secrets.AIVEN_PROJECT_NAME }}
+      TF_VAR_aiven_api_token: ${{ secrets.AIVEN_API_TOKEN }}
+      TF_VAR_admin_username:: ${{ secrets.PSQL_ADMIN_USERNAME }}
+      TF_VAR_admin_password:: ${{ secrets.PSQL_ADMIN_PASSWORD }}
 
     steps:
       - name: Checkout Repository
