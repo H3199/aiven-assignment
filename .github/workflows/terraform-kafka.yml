@@ -2,8 +2,8 @@ name: kafka-terraform
 
 on:
   push:
-    branches:
-      - main # Run on pushes to the main branch
+    paths:
+      - "infra/kafka/**"
   pull_request:
     branches:
       - main # Run on pull requests to the main branch
