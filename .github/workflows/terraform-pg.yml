@@ -31,10 +31,13 @@ jobs:
         run: pwd
 
       - name: Terraform Init
+        working-directory: ./infra/postgresql
         run: terraform init
 
       - name: Terraform Plan
+        working-directory: ./infra/postgresql
         run: terraform plan
 
       - name: Terraform Apply
+        working-directory: ./infra/postgresql
         run: terraform apply --auto-approve
