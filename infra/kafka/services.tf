@@ -1,6 +1,6 @@
 resource "aiven_kafka" "assignment-kafka" {
   project      = var.project_name
-  cloud_name   = "google-europe-west3"
+  cloud_name   = "google-europe-west1"
   plan         = "business-4"
   service_name = "assignment-kafka"
   default_acl  = false
@@ -9,7 +9,6 @@ resource "aiven_kafka" "assignment-kafka" {
     kafka_rest      = true
     kafka_connect   = false
     schema_registry = true
-    kafka_version   = "3.4"
 
     kafka {
       auto_create_topics_enable  = true
