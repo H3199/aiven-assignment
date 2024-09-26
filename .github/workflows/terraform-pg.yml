@@ -15,8 +15,8 @@ jobs:
     env:
       TF_VAR_project_name: ${{ secrets.AIVEN_PROJECT_NAME }}
       TF_VAR_aiven_api_token: ${{ secrets.AIVEN_API_TOKEN }}
-      TF_VAR_admin_username:: ${{ secrets.PSQL_ADMIN_USERNAME }}
-      TF_VAR_admin_password:: ${{ secrets.PSQL_ADMIN_PASSWORD }}
+      TF_VAR_admin_username: ${{ secrets.PSQL_ADMIN_USERNAME }}
+      TF_VAR_admin_password: ${{ secrets.PSQL_ADMIN_PASSWORD }}
 
     steps:
       - name: Checkout Repository
