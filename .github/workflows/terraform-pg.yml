@@ -1,0 +1,40 @@
+name: postgres-terraform
+
+on:
+  push:
+    branches:
+      - main # Run on pushes to the main branch
+  pull_request:
+    branches:
+      - main # Run on pull requests to the main branch
+
+jobs:
+  terraform:
+    name: Terraform-postgres
+    runs-on: ubuntu-latest
+    env:
+      TF_VAR_AIVEN_API_TOKEN: ${{ secrets.TF_VAR_AIVEN_API_TOKEN }}
+      TF_VAR_PSQL_ADMIN_USERNAME: ${{ secrets.TF_VAR_PSQL_ADMIN_USERNAME }}
+      TF_VAR_PSQL_ADMIN_PASSWORD: ${{ secrets.TF_VAR_PSQL_ADMIN_PASSWORD }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0 # Replace with the Terraform version you need
+
+      - name: Change directory
+        working-directory: ./infra/postgresql
+        run: pwd
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      - name: Terraform Apply
+        run: terraform apply --auto-approve
