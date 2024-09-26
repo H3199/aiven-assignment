@@ -1,7 +1,7 @@
 resource "aiven_kafka" "assignment-kafka" {
   project      = var.project_name
   cloud_name   = "google-europe-west3"
-  plan         = "startup-4"
+  plan         = "business-4"
   service_name = "assignment-kafka"
   default_acl  = false
 
