@@ -7,7 +7,7 @@ resource "aiven_kafka" "assignment-kafka" {
 
   kafka_user_config {
     kafka_rest      = true
-    kafka_connect   = false
+    kafka_connect   = true
     schema_registry = true
 
     kafka {
