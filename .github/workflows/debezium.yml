@@ -60,6 +60,7 @@ jobs:
 
       - name: Deploy Debezium PostgreSQL Connector
         run: |
+          cd infra/debezium/
           # Use curl to deploy the Debezium PostgreSQL Source Connector
           curl -X POST -H "Content-Type: application/json" \
                --data @debezium_source_pg.json \
