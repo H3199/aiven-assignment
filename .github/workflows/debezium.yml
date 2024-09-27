@@ -32,9 +32,9 @@ jobs:
 
       - name: Get PostgreSQL hostname from Aiven
         run: |
-          AIVEN_PROJECT: ${{ secrets.AIVEN_PROJECT }}
-          AIVEN_PG_SERVICE_NAME: ${{ secrets.AIVEN_PG_SERVICE_NAME }}
-          AIVEN_API_TOKEN: ${{ secrets.AIVEN_API_TOKEN }}
+          AIVEN_PROJECT=${{ secrets.AIVEN_PROJECT }}
+          AIVEN_PG_SERVICE_NAME=${{ secrets.AIVEN_PG_SERVICE_NAME }}
+          AIVEN_API_TOKEN=${{ secrets.AIVEN_API_TOKEN }}
           echo "$AIVEN_PROJECT"
           echo "$AIVEN_PG_SERVICE_NAME"
           curl -s -H "Authorization: aivenv1 ${AIVEN_API_TOKEN}" https://api.aiven.io/v1/project/${AIVEN_PROJECT}/service/${AIVEN_PG_SERVICE_NAME}
