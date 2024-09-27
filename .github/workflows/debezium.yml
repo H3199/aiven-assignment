@@ -39,7 +39,7 @@ jobs:
       - name: Get Kafka Connect REST API URL from Aiven
         run: |
 
-          KAFKA_CONNECT_REST_API_URL=$(curl -H "Authorization: aivenv1 ${{ secrets.AIVEN_API_TOKEN }}" https://api.aiven.io/v1/project/${{ secrets.AIVEN_PROJECT_NAME }}/service/${{ secrets.AIVEN_KAFKA_SERVICE_NAME }} | jq -r '.service.components[] | select(.component == "kafka_connect") | "\(.host):\(.port)"')KAFKA_SERVICE_NAME | jq -r '.service.components[] | select(.component == "kafka_connect") | .host')
+          KAFKA_CONNECT_REST_API_URL=$(curl -H "Authorization: aivenv1 ${{ secrets.AIVEN_API_TOKEN }}" https://api.aiven.io/v1/project/${{ secrets.AIVEN_PROJECT_NAME }}/service/${{ secrets.AIVEN_KAFKA_SERVICE_NAME }} | jq -r '.service.components[] | select(.component == "kafka_connect") | "\(.host):\(.port)"')
 
 
           # Set the KAFKA_CONNECT_REST_API_URL as an environment variable
