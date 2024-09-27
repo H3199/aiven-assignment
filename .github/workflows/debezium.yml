@@ -32,8 +32,8 @@ jobs:
 
       - name: Get PostgreSQL hostname from Aiven
         run: |
-
-          DB_HOST=$(curl -s -H "Authorization: aivenv1 ${AIVEN_API_TOKEN}" https://api.aiven.io/v1/project/${AIVEN_PROJECT}/service/${AIVEN_PG_SERVICE_NAME} | jq -r '.service.components[] | select(.component == "pg") | .host')
+          curl -s -H "Authorization: aivenv1 ${AIVEN_API_TOKEN}" https://api.aiven.io/v1/project/${AIVEN_PROJECT}/service/${AIVEN_PG_SERVICE_NAME} | jq
+        #  DB_HOST=$(curl -s -H "Authorization: aivenv1 ${AIVEN_API_TOKEN}" https://api.aiven.io/v1/project/${AIVEN_PROJECT}/service/${AIVEN_PG_SERVICE_NAME} | jq -r '.service.components[] | select(.component == "pg") | .host')
 
 
 
