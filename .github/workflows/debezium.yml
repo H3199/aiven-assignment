@@ -48,8 +48,7 @@ jobs:
       - name: Prepare debezium_source_pg.json with environment variables
         run: |
           # Copy the template JSON config file to use
-          pwd
-          ls -la
+          cd infra/debezium/
           cp debezium_source_pg_template.json debezium_source_pg.json
 
           # Replace placeholders in debezium_source_pg.json with actual environment variables
