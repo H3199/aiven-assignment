@@ -1,22 +1,21 @@
-name: postgres-terraform
+name: kafka-terraform
 
 on:
   push:
     paths:
-      - "infra/postgresql/**"
+      - "infra/kafka/**"
   pull_request:
     branches:
       - main # Run on pull requests to the main branch
 
 jobs:
   terraform:
-    name: Terraform-postgres
+    name: Terraform-kafka
     runs-on: ubuntu-latest
     env:
       TF_VAR_project_name: ${{ secrets.AIVEN_PROJECT_NAME }}
       TF_VAR_aiven_api_token: ${{ secrets.AIVEN_API_TOKEN }}
-      TF_VAR_admin_username: ${{ secrets.PSQL_ADMIN_USERNAME }}
-      TF_VAR_admin_password: ${{ secrets.PSQL_ADMIN_PASSWORD }}
+      TF_VAR_kafka_user_name: ${{ secrets.KAFKA_USERNAME }}
 
     steps:
       - name: Checkout Repository
@@ -28,17 +27,17 @@ jobs:
           terraform_version: 1.5.0 # Replace with the Terraform version you need
 
       - name: Change directory
-        working-directory: ./infra/postgresql
+        working-directory: ./infra/kafka
         run: pwd
 
       - name: Terraform Init
-        working-directory: ./infra/postgresql
+        working-directory: ./infra/kafka
         run: terraform init
 
       - name: Terraform Plan
-        working-directory: ./infra/postgresql
+        working-directory: ./infra/kafka
         run: terraform plan
 
       - name: Terraform Apply
-        working-directory: ./infra/postgresql
+        working-directory: ./infra/kafka
         run: terraform apply --auto-approve
