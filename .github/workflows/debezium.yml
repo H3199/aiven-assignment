@@ -1,0 +1,69 @@
+# This is slightly convoluted, but basically after we've deployed postgresql and kafka,
+# we need to curl up some environment variables from aiven's API and create a debezium_source_pg.json file.
+# We then use curl to deploy the connector and check the status.
+
+# curl -H "Authorization: aivenv1 $TF_VAR_aiven_api_token" https://api.aiven.io/v1/project/$TF_VAR_project_name/service/postgresql | jq '.service.components[] | select(.component == "pg") | .host'
+# curl -H "Authorization: aivenv1 $TF_VAR_aiven_api_token" https://api.aiven.io/v1/project/$TF_VAR_project_name/service/assignment-kafka | jq -r '.service.components[] | select(.component == "kafka_connect") | "\(.host):\(.port)"'
+name: Deploy Debezium PostgreSQL Connector
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-debezium-connector:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Set up environment variables
+        env:
+          DB_USER: ${{ secrets.PSQL_ADMIN_USERNAME }}
+          DB_PASSWORD: ${{ secrets.PSQL_ADMIN_PASSWORD }}
+          DB_NAME: ${{ secrets.POSTGRES_DB }}
+          AIVEN_API_TOKEN: ${{ secrets.AIVEN_API_TOKEN }}
+          AIVEN_PROJECT: ${{ secrets.AIVEN_PROJECT }}
+          AIVEN_PG_SERVICE_NAME: ${{ secrets.AIVEN_PG_SERVICE_NAME }}
+          AIVEN_KAFKA_SERVICE_NAME: ${{ secrets.AIVEN_KAFKA_SERVICE_NAME }}
+        run: echo "Environment variables set."
+
+      - name: Get PostgreSQL hostname from Aiven
+        run: |
+          DB_HOST=$(curl -s -H "Authorization: aivenv1 ${AIVEN_API_TOKEN}" https://api.aiven.io/v1/project/${AIVEN_PROJECT}/service/${AIVEN_PG_SERVICE_NAME} | jq -r '.service.components[] | select(.component == "pg") | .host')
+
+          # Set the DB_HOST as an environment variable
+          echo "DB_HOST=$DB_HOST" >> $GITHUB_ENV
+
+      - name: Get Kafka Connect REST API URL from Aiven
+        run: |
+          KAFKA_CONNECT_REST_API_URL=$(curl -H "Authorization: aivenv1 ${AIVEN_API_TOKEN}" https://api.aiven.io/v1/project/${AIVEN_PROJECT}/service/${AIVEN_KAFKA_SERVICE_NAME} | jq -r '.service.components[] | select(.component == "kafka_connect") | "\(.host):\(.port)"')KAFKA_SERVICE_NAME | jq -r '.service.components[] | select(.component == "kafka_connect") | .host')
+
+          # Set the KAFKA_CONNECT_REST_API_URL as an environment variable
+          echo "KAFKA_CONNECT_REST_API_URL=$KAFKA_CONNECT_REST_API_URL" >> $GITHUB_ENV
+
+      - name: Prepare debezium_source_pg.json with environment variables
+        run: |
+          # Copy the template JSON config file to use
+          cp debezium_source_pg_template.json debezium_source_pg.json
+
+          # Replace placeholders in debezium_source_pg.json with actual environment variables
+          sed -i 's|${db_host}|'"$DB_HOST"'|g' debezium_source_pg.json
+          sed -i 's|${db_user}|'"$DB_USER"'|g' debezium_source_pg.json
+          sed -i 's|${db_password}|'"$DB_PASSWORD"'|g' debezium_source_pg.json
+          sed -i 's|${db_name}|'"$DB_NAME"'|g' debezium_source_pg.json
+          sed -i 's|${kafka_bootstrap_servers}|'"$KAFKA_CONNECT_REST_API_URL"'|g' debezium_source_pg.json
+
+      - name: Deploy Debezium PostgreSQL Connector
+        run: |
+          # Use curl to deploy the Debezium PostgreSQL Source Connector
+          curl -X POST -H "Content-Type: application/json" \
+               --data @debezium_source_pg.json \
+               $KAFKA_CONNECT_REST_API_URL/connectors | jq .
+
+      - name: Check connector status
+        run: |
+          # Check the status of the deployed connector
+          curl $KAFKA_CONNECT_REST_API_URL/connectors/pg-source-connector/status | jq .
