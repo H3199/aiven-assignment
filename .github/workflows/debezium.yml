@@ -25,23 +25,16 @@ jobs:
           DB_PASSWORD: ${{ secrets.PSQL_ADMIN_PASSWORD }}
           DB_NAME: ${{ secrets.POSTGRES_DB }}
           AIVEN_API_TOKEN: ${{ secrets.AIVEN_API_TOKEN }}
-          AIVEN_PROJECT: ${{ secrets.AIVEN_PROJECT }}
+          AIVEN_PROJECT: ${{ secrets.AIVEN_PROJECT_NAME }}
           AIVEN_PG_SERVICE_NAME: ${{ secrets.AIVEN_PG_SERVICE_NAME }}
           AIVEN_KAFKA_SERVICE_NAME: ${{ secrets.AIVEN_KAFKA_SERVICE_NAME }}
         run: echo "Environment variables set."
 
       - name: Get PostgreSQL hostname from Aiven
         run: |
-          AIVEN_PROJECT=${{ secrets.AIVEN_PROJECT }}
-          AIVEN_PG_SERVICE_NAME=${{ secrets.AIVEN_PG_SERVICE_NAME }}
-          AIVEN_API_TOKEN=${{ secrets.AIVEN_API_TOKEN }}
-          echo "$AIVEN_PROJECT"
-          echo "$AIVEN_PG_SERVICE_NAME"
-          curl -s -H "Authorization: aivenv1 ${{ secrets.AIVEN_API_TOKEN }}" https://api.aiven.io/v1/project/${{ secrets.AIVEN_PROJECT_NAME }}/service/${{ secrets.AIVEN_PG_SERVICE_NAME }}
-        #  DB_HOST=$(curl -s -H "Authorization: aivenv1 ${AIVEN_API_TOKEN}" https://api.aiven.io/v1/project/${AIVEN_PROJECT}/service/${AIVEN_PG_SERVICE_NAME} | jq -r '.service.components[] | select(.component == "pg") | .host')
-
-        # Set the DB_HOST as an environment variable
-        #  echo "DB_HOST=$DB_HOST" >> $GITHUB_ENV
+          DB_HOST=$(curl -s -H "Authorization: aivenv1 ${{ secrets.AIVEN_API_TOKEN }}" https://api.aiven.io/v1/project/${{ secrets.AIVEN_PROJECT_NAME }}/service/${{ secrets.AIVEN_PG_SERVICE_NAME }} | jq -r '.service.components[] | select(.component == "pg") | .host'))
+          echo "DB_HOST=$DB_HOST" >> $GITHUB_ENV
+          echo "$DB_HOST"
 
       - name: Get Kafka Connect REST API URL from Aiven
         run: |
