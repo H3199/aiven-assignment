@@ -20,16 +20,15 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up environment variables
-        env:
-          DB_USER: ${{ secrets.PSQL_ADMIN_USERNAME }}
-          DB_PASSWORD: ${{ secrets.PSQL_ADMIN_PASSWORD }}
-          DB_NAME: ${{ secrets.POSTGRES_DB }}
-          AIVEN_API_TOKEN: ${{ secrets.AIVEN_API_TOKEN }}
-          AIVEN_PROJECT: ${{ secrets.AIVEN_PROJECT_NAME }}
-          AIVEN_PG_SERVICE_NAME: ${{ secrets.AIVEN_PG_SERVICE_NAME }}
-          AIVEN_KAFKA_SERVICE_NAME: ${{ secrets.AIVEN_KAFKA_SERVICE_NAME }}
-          TABLE_LIST: "public.items,public.containers,public.containers_items" # TODO: get this list from the db schema.
-        run: echo $TABLE_LIST
+        run: |
+          echo "DB_USER=${{ secrets.PSQL_ADMIN_USERNAME }}" >> $GITHUB_ENV
+          echo "DB_PASSWORD=${{ secrets.PSQL_ADMIN_PASSWORD }}" >> $GITHUB_ENV
+          echo "DB_NAME=${{ secrets.POSTGRES_DB }}" >> $GITHUB_ENV
+          echo "AIVEN_API_TOKEN=${{ secrets.AIVEN_API_TOKEN }}" >> $GITHUB_ENV
+          echo "AIVEN_PROJECT=${{ secrets.AIVEN_PROJECT_NAME }}" >> $GITHUB_ENV
+          echo "AIVEN_PG_SERVICE_NAME=${{ secrets.AIVEN_PG_SERVICE_NAME }}" >> $GITHUB_ENV
+          echo "AIVEN_KAFKA_SERVICE_NAME=${{ secrets.AIVEN_KAFKA_SERVICE_NAME }}" >> $GITHUB_ENV
+          echo "TABLE_LIST=public.items,public.containers,public.containers_items" >> $GITHUB_ENV
 
       - name: Get PostgreSQL hostname from Aiven
         run: |
