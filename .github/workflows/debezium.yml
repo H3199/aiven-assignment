@@ -1,4 +1,4 @@
-# This is slightly convoluted, but basically after we've deployed postgresql and kafka,
+# This is slightly convoluted (for me at least), but basically after we've deployed postgresql and kafka,
 # we need to curl up some environment variables from aiven's API and create a debezium_source_pg.json file.
 # We then use curl to deploy the connector and check the status.
 
@@ -28,6 +28,7 @@ jobs:
           AIVEN_PROJECT: ${{ secrets.AIVEN_PROJECT_NAME }}
           AIVEN_PG_SERVICE_NAME: ${{ secrets.AIVEN_PG_SERVICE_NAME }}
           AIVEN_KAFKA_SERVICE_NAME: ${{ secrets.AIVEN_KAFKA_SERVICE_NAME }}
+          TABLE_LIST: "public.items,public.containers,public.containers_items" # TODO: get this list from the db schema.
         run: echo "Environment variables set."
 
       - name: Get PostgreSQL hostname from Aiven
