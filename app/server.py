@@ -16,12 +16,15 @@ class GameServer:
         print(f"Server started at {self.host}:{self.port}")
 
         # Database connection setup
+        # TODO: hardcoded values
+        # admin password in github, nice.
         print("Connecting to database...")
         self.db_conn = psycopg2.connect(
             dbname="defaultdb", user="avnadmin", password="AVNS_XVoel8gEFJDDHxXrMmH", host="postgresql-eerohaavisto-49ce.d.aivencloud.com", port=20482
         )
         self.db_conn.autocommit = False
         self.db_cursor = self.db_conn.cursor()
+        print("Database connection established.")
 
     def handle_client(self, client_socket, address):
         print(f"New connection from {address}")
@@ -68,16 +71,46 @@ class GameServer:
                 item_id = action['item_id']
                 from_container_id = action['from_container_id']
                 to_container_id = action['to_container_id']
-
                 self.move_item(item_id, from_container_id, to_container_id)
-
                 return f"Item {item_id} moved from {from_container_id} to {to_container_id}"
+
+            elif action['action'] == 'get_containers':
+                containers = self.get_containers()
+                return json.dumps({'containers': containers})
+
+            elif action['action'] == 'get_container_contents':
+                container_id = action['container_id']
+                contents = self.get_container_contents(container_id)
+                return json.dumps({'container_id': container_id, 'contents': contents})
 
             else:
                 return "Unknown action"
+
         except Exception as e:
             print(f"Error processing request: {e}")
             return "Error processing request"
+
+    def get_containers(self):
+        # Retrieve all containers from the database.
+        cursor = self.db_conn.cursor()
+        cursor.execute("SELECT container_id, container_name FROM containers;")
+        containers = cursor.fetchall()
+        cursor.close()
+        return containers
+
+    def get_container_contents(self, container_id):
+        # Retrieve all items in the specified container
+        cursor =self.db_conn.cursor()
+        query = """
+            SELECT i.item_id, i.item_name
+            FROM container_items ci
+            JOIN items i ON ci.item_id = i.item_id
+            WHERE ci.container_id = %s;
+        """
+        cursor.execute(query, (container_id,))
+        contents = cursor.fetchall()
+        cursor.close()
+        return contents
 
     def move_item(self, item_id, from_container_id, to_container_id):
         try:

@@ -1,0 +1,17 @@
+INSERT INTO containers (container_name)
+VALUES
+    ('World'),
+    ('Player 1 Inventory'),
+    ('Player 2 Inventory'),
+    ('Small Chest'),
+    ('Large Chest');
+
+
+INSERT INTO items (item_name)
+VALUES
+    ('Sword'),
+    ('Shield'),
+    ('Potion'),
+    ('Bow'),
+    ('Arrow'),
+    ('Helmet');

@@ -1,0 +1,17 @@
+CREATE TABLE containers (
+    container_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    container_name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE items (
+    item_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    item_name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE container_items (
+    container_id UUID NOT NULL,
+    item_id UUID NOT NULL,
+    PRIMARY KEY (container_id, item_id),  -- Prevent duplicate entries of the same item in the same container
+    FOREIGN KEY (container_id) REFERENCES containers(container_id) ON DELETE CASCADE,  -- Ensures containers exist
+    FOREIGN KEY (item_id) REFERENCES items(item_id) ON DELETE CASCADE  -- Ensures items exist
+);

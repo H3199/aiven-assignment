@@ -46,13 +46,14 @@ if __name__ == "__main__":
 
     if client.connect():
         # Example action: Move an item
-        action = {
-            'action': 'move',
-            'item_id': 1,
-            'from_container_id': 1,
-            'to_container_id': 2
-        }
-        client.send_request(action)
+    #    action = {
+    #        'action': 'move',
+    #       'item_id': 1,
+    #       'from_container_id': 1,
+    #        'to_container_id': 2
+    #    }
+       action = {'action': 'get_containers'}
+       client.send_request(action)
 
         # Close the connection after the request
-        client.close()
+    client.close()
