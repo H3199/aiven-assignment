@@ -57,6 +57,7 @@ jobs:
           sed -i 's|${db_user}|'"$DB_USER"'|g' debezium_source_pg.json
           sed -i 's|${db_password}|'"$DB_PASSWORD"'|g' debezium_source_pg.json
           sed -i 's|${db_name}|'"$DB_NAME"'|g' debezium_source_pg.json
+          sed -i 's|${table_list}|'"$TABLE_LIST"'|g' debezium_source_pg.json
           sed -i 's|${kafka_bootstrap_servers}|'"$KAFKA_CONNECT_REST_API_URL"'|g' debezium_source_pg.json
 
           cat debezium_source_pg.json
