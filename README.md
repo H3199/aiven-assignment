@@ -7,6 +7,7 @@ The debezium source connector I ended up putting up by manually curling with a s
 
 ```bash
 curl -X POST -H "Content-Type: application/json" --data @debezium_manual.json https://avnadmin...
+```markdown
 
 But the gh-workflow using sed to write a json file and then curling it is close to working, just ran out of time a bit.
 Workflows for terraforming kafka and postgres were much simpler. The db schema and test data do not have workflows.
